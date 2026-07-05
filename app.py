@@ -3,8 +3,9 @@ from flask_cors import CORS
 import bcrypt
 import json
 import requests
-import os
 import threading
+import asyncio
+import os
 from config import SECRET_KEY, DISCORD_TOKEN, GUILD_ID
 
 app = Flask(__name__)
@@ -14,21 +15,25 @@ CORS(app)
 USERS_FILE = 'users.json'
 
 # ============================================================
-# URUCHOM BOTA W TLE
+# URUCHOM BOTA W TLE (Z OBSŁUGĄ BŁĘDÓW)
 # ============================================================
 
 def run_bot():
-    import asyncio
-    from bot import bot
     try:
+        from bot import bot
+        print("🤖 Uruchamianie bota...")
         bot.run(DISCORD_TOKEN)
     except Exception as e:
         print(f"❌ Błąd bota: {e}")
 
-thread = threading.Thread(target=run_bot)
-thread.daemon = True
-thread.start()
-print("🤖 Bot uruchomiony w tle")
+# Uruchom bota w osobnym wątku tylko jeśli DISCORD_TOKEN istnieje
+if DISCORD_TOKEN and DISCORD_TOKEN != 'TWÓJ_TOKEN':
+    thread = threading.Thread(target=run_bot)
+    thread.daemon = True
+    thread.start()
+    print("🤖 Bot uruchomiony w tle")
+else:
+    print("⚠️ Brak tokena bota – bot nie zostanie uruchomiony")
 
 # ============================================================
 # FUNKCJE POMOCNICZE
@@ -50,6 +55,8 @@ def save_users(users):
 # ============================================================
 
 def verify_user_discord(user_id: str):
+    if not DISCORD_TOKEN or DISCORD_TOKEN == 'TWÓJ_TOKEN':
+        return None
     url = f"https://discord.com/api/v10/guilds/{GUILD_ID}/members/{user_id}"
     headers = {"Authorization": f"Bot {DISCORD_TOKEN}"}
     try:
@@ -210,12 +217,11 @@ def reset_password():
     if user_id not in users:
         return jsonify({'error': 'Użytkownik nie istnieje'}), 404
     
-    # Hashuj nowe hasło
     hashed = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
     users[user_id]['password'] = hashed.decode('utf-8')
     save_users(users)
     
     return jsonify({'success': True, 'message': 'Hasło zostało zresetowane!'})
-    
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
