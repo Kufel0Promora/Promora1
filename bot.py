@@ -56,14 +56,21 @@ async def reset_password(ctx, user_id: str, new_password: str):
         return
     
     try:
-        # Sprawdź czy użytkownik istnieje w bazie
-        response = requests.get('https://promora-backend.onrender.com/api/leaderboard')
+        # Pobierz WSZYSTKICH użytkowników (nie tylko top 10!)
+        response = requests.get('https://promora-backend.onrender.com/api/users')
         if response.status_code != 200:
             await ctx.send("❌ Nie udało się połączyć z bazą danych!")
             return
         
         users_data = response.json()
-        user_exists = any(user.get('id') == user_id for user in users_data)
+        print(f"🔍 Znaleziono {len(users_data)} użytkowników")
+        
+        # Sprawdź czy użytkownik istnieje
+        user_exists = False
+        for user in users_data:
+            if user['id'] == user_id:
+                user_exists = True
+                break
         
         if not user_exists:
             await ctx.send(f"❌ Użytkownik o ID `{user_id}` nie istnieje!")
