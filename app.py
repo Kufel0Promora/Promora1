@@ -181,6 +181,9 @@ def leaderboard():
     leaderboard.sort(key=lambda x: x['score'], reverse=True)
     return jsonify(leaderboard[:10])
 
+@app.route('/ping')
+def ping():
+    return "Pong!", 200
 # ============================================================
 # URUCHOMIENIE
 # ============================================================
