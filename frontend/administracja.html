@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Promora | Administracja</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+        :root {
+            --bg: #0a0a1a;
+            --card: rgba(255,255,255,0.04);
+            --border: rgba(255,255,255,0.08);
+            --purple: #8B5CF6;
+            --pink: #EC4899;
+            --blue: #00D4FF;
+            --text: #fff;
+            --text2: #a0a0c0;
+            --radius: 16px;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ===== NAV ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 14px 0;
+            background: rgba(10,10,26,0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(139,92,246,0.15);
+        }
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--purple), var(--pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 8px;
+            align-items: center;
+        }
+        .nav-links a {
+            color: var(--text2);
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+        .nav-links a:hover {
+            color: #fff;
+            background: rgba(139,92,246,0.1);
+        }
+        .nav-links a.active {
+            color: #fff;
+            background: rgba(139,92,246,0.15);
+        }
+        .btn-discord-nav {
+            background: #5865F2 !important;
+            color: #fff !important;
+            border-radius: 30px;
+            padding: 8px 20px !important;
+        }
+        .btn-discord-nav:hover {
+            background: #4752C4 !important;
+        }
+
+        /* ===== PAGE HERO ===== */
+        .page-hero {
+            padding: 120px 0 40px;
+            text-align: center;
+        }
+        .page-hero h1 {
+            font-size: 48px;
+            font-weight: 900;
+        }
+        .page-hero h1 .highlight {
+            background: linear-gradient(135deg, var(--purple), var(--pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .page-hero p {
+            color: var(--text2);
+            font-size: 18px;
+            margin-top: 8px;
+        }
+
+        /* ===== ROLE ===== */
+        .roles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+            margin: 40px 0;
+        }
+        .role-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px 24px;
+            text-align: center;
+            transition: 0.3s;
+        }
+        .role-card:hover {
+            border-color: var(--purple);
+            transform: translateY(-4px);
+        }
+        .role-card .icon {
+            font-size: 44px;
+            margin-bottom: 12px;
+            display: block;
+        }
+        .role-card h3 {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        .role-card .role-badge {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 14px;
+            border-radius: 30px;
+            background: var(--purple);
+            color: #fff;
+            margin-bottom: 12px;
+        }
+        .role-card .role-badge.owner { background: #FFD700; color: #000; }
+        .role-card .role-badge.admin { background: #FF6B6B; color: #fff; }
+        .role-card .role-badge.mod { background: #4ECDC4; color: #000; }
+        .role-card .role-badge.event { background: var(--blue); color: #000; }
+        .role-card p {
+            color: var(--text2);
+            font-size: 14px;
+            line-height: 1.7;
+            text-align: left;
+        }
+        .role-card ul {
+            text-align: left;
+            color: var(--text2);
+            font-size: 14px;
+            list-style: none;
+            padding: 8px 0 0 0;
+        }
+        .role-card ul li {
+            padding: 4px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        .role-card ul li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--purple);
+        }
+
+        /* ===== O ADMINISTRACJI ===== */
+        .about-admin {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            margin: 40px 0;
+        }
+        .about-admin h2 {
+            font-size: 24px;
+            margin-bottom: 12px;
+        }
+        .about-admin h2 i {
+            color: var(--purple);
+            margin-right: 10px;
+        }
+        .about-admin p {
+            color: var(--text2);
+            font-size: 16px;
+            line-height: 1.8;
+        }
+        .about-admin .values {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+        .about-admin .values .val {
+            background: rgba(255,255,255,0.03);
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+        .about-admin .values .val span {
+            font-size: 28px;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .about-admin .values .val strong {
+            color: var(--text);
+            font-size: 15px;
+        }
+        .about-admin .values .val small {
+            color: var(--text2);
+            font-size: 13px;
+            display: block;
+        }
+
+        /* ===== STOPKA ===== */
+        .footer {
+            padding: 40px 0 24px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: #6B6B8A;
+            font-size: 14px;
+            margin-top: 40px;
+        }
+        .footer .socials {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+        .footer .socials a {
+            color: var(--text2);
+            font-size: 20px;
+            transition: 0.3s;
+        }
+        .footer .socials a:hover { color: var(--purple); }
+
+        /* ===== RESPONSYWNOSC ===== */
+        @media (max-width: 768px) {
+            .page-hero h1 { font-size: 32px; }
+            .about-admin .values { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 480px) {
+            .page-hero h1 { font-size: 24px; }
+            .roles-grid { grid-template-columns: 1fr; }
+            .about-admin .values { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================================
+    NAWIGACJA
+    ============================================================ -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">PROMORA</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Start</a></li>
+                <li><a href="regulamin.html">Regulamin</a></li>
+                <li><a href="administracja.html" class="active">Administracja</a></li>
+                <li><a href="faq.html">FAQ</a></li>
+                <li><a href="eventy.html">Eventy</a></li>
+                <li><a href="gra.html">Gra</a></li>
+                <li><a href="https://discord.gg/f8qhJQSRA7" target="_blank" class="btn-discord-nav"><i class="fab fa-discord"></i> Dołącz</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ============================================================
+    HERO
+    ============================================================ -->
+    <section class="page-hero">
+        <div class="container">
+            <h1>🛡️ <span class="highlight">Administracja</span> Promora</h1>
+            <p>Poznaj naszą kadrę zarządzającą i ich obowiązki</p>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    RANKING RÓL
+    ============================================================ -->
+    <section>
+        <div class="container">
+            <div class="roles-grid">
+
+                <!-- 👑 Właściciel -->
+                <div class="role-card">
+                    <span class="icon">👑</span>
+                    <h3>Właściciel</h3>
+                    <span class="role-badge owner">ZAŁOŻYCIEL</span>
+                    <p>Osoba odpowiedzialna za całokształt serwera. Podejmuje kluczowe decyzje strategiczne i dba o długofalowy rozwój Promora.</p>
+                    <ul>
+                        <li>Zarządzanie serwerem</li>
+                        <li>Decyzje strategiczne</li>
+                        <li>Kontakty zewnętrzne</li>
+                        <li>Nadzór nad administracją</li>
+                    </ul>
+                </div>
+
+                <!-- 🛡️ Administrator -->
+                <div class="role-card">
+                    <span class="icon">🛡️</span>
+                    <h3>Administrator</h3>
+                    <span class="role-badge admin">ADMIN</span>
+                    <p>Wspiera właściciela w zarządzaniu. Odpowiada za moderację, konfigurację botów, zarządzanie kanałami i bezpieczeństwo.</p>
+                    <ul>
+                        <li>Moderacja treści</li>
+                        <li>Konfiguracja kanałów</li>
+                        <li>Zarządzanie botami</li>
+                        <li>Bezpieczeństwo</li>
+                    </ul>
+                </div>
+
+                <!-- 🔧 Moderator -->
+                <div class="role-card">
+                    <span class="icon">🔧</span>
+                    <h3>Moderator</h3>
+                    <span class="role-badge mod">MOD</span>
+                    <p>Dba o porządek i przestrzeganie regulaminu. Rozwiązuje konflikty, pomaga użytkownikom i czuwa nad przyjazną atmosferą.</p>
+                    <ul>
+                        <li>Przestrzeganie regulaminu</li>
+                        <li>Rozwiązywanie konfliktów</li>
+                        <li>Pomoc użytkownikom</li>
+                        <li>Raportowanie problemów</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    O ADMINISTRACJI
+    ============================================================ -->
+    <section>
+        <div class="container">
+            <div class="about-admin">
+                <h2><i class="fas fa-heart"></i> O naszej administracji</h2>
+                <p>
+                    Administracja Promora to zespół pasjonatów, którzy na co dzień dbają o to, abyś czuł się u nas bezpiecznie i komfortowo.
+                    Naszym priorytetem jest tworzenie przyjaznej, otwartej i pomocnej społeczności.
+                    Każdy członek administracji przeszedł odpowiednie szkolenie i działa zgodnie z regulaminem,
+                    aby zapewnić Ci najlepsze możliwe doświadczenia na serwerze.
+                </p>
+                <div class="values">
+                    <div class="val">
+                        <span>🤝</span>
+                        <strong>Pomoc</strong>
+                        <small>Zawsze służymy radą</small>
+                    </div>
+                    <div class="val">
+                        <span>⚖️</span>
+                        <strong>Sprawiedliwość</strong>
+                        <small>Jednakowe traktowanie</small>
+                    </div>
+                    <div class="val">
+                        <span>🚀</span>
+                        <strong>Rozwój</strong>
+                        <small>Ciągle ulepszamy serwer</small>
+                    </div>
+                    <div class="val">
+                        <span>🏆</span>
+                        <strong>Profesjonalizm</strong>
+                        <small>Działamy z pasją</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    STOPKA
+    ============================================================ -->
+    <footer class="footer">
+        <div class="container">
+            <div class="socials">
+                <a href="https://discord.gg/f8qhJQSRA7" target="_blank"><i class="fab fa-discord"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+                <a href="#"><i class="fab fa-github"></i></a>
+            </div>
+            <p>© 2026 B.P. Wszelkie prawa zastrzeżone. | Built with <i class="fas fa-heart" style="color:var(--pink);"></i></p>
+        </div>
+    </footer>
+
+</body>
+</html>

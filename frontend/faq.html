@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Promora | FAQ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+        :root {
+            --bg: #0a0a1a;
+            --card: rgba(255,255,255,0.04);
+            --border: rgba(255,255,255,0.08);
+            --purple: #8B5CF6;
+            --pink: #EC4899;
+            --blue: #00D4FF;
+            --text: #fff;
+            --text2: #a0a0c0;
+            --radius: 16px;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ===== NAV ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 14px 0;
+            background: rgba(10,10,26,0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(139,92,246,0.15);
+        }
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--purple), var(--pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 8px;
+            align-items: center;
+        }
+        .nav-links a {
+            color: var(--text2);
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+        .nav-links a:hover {
+            color: #fff;
+            background: rgba(139,92,246,0.1);
+        }
+        .nav-links a.active {
+            color: #fff;
+            background: rgba(139,92,246,0.15);
+        }
+        .btn-discord-nav {
+            background: #5865F2 !important;
+            color: #fff !important;
+            border-radius: 30px;
+            padding: 8px 20px !important;
+        }
+        .btn-discord-nav:hover {
+            background: #4752C4 !important;
+        }
+
+        /* ===== PAGE HERO ===== */
+        .page-hero {
+            padding: 120px 0 40px;
+            text-align: center;
+        }
+        .page-hero h1 {
+            font-size: 48px;
+            font-weight: 900;
+        }
+        .page-hero h1 .highlight {
+            background: linear-gradient(135deg, var(--purple), var(--pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .page-hero p {
+            color: var(--text2);
+            font-size: 18px;
+            margin-top: 8px;
+        }
+
+        /* ===== FAQ LISTA ===== */
+        .faq-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 40px 0 60px;
+        }
+        .faq-item {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .faq-item:hover {
+            border-color: rgba(139,92,246,0.3);
+        }
+        .faq-item .question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 24px;
+            font-weight: 700;
+            font-size: 17px;
+            user-select: none;
+            gap: 16px;
+        }
+        .faq-item .question i {
+            color: var(--purple);
+            font-size: 18px;
+            transition: 0.3s;
+            flex-shrink: 0;
+        }
+        .faq-item .answer {
+            max-height: 0;
+            padding: 0 24px;
+            color: var(--text2);
+            font-size: 15px;
+            line-height: 1.7;
+            overflow: hidden;
+            transition: 0.3s ease;
+        }
+        .faq-item.open .answer {
+            max-height: 400px;
+            padding: 0 24px 20px 24px;
+        }
+        .faq-item.open .question i {
+            transform: rotate(180deg);
+        }
+
+        /* ===== STOPKA ===== */
+        .footer {
+            padding: 40px 0 24px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: #6B6B8A;
+            font-size: 14px;
+        }
+        .footer .socials {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+        .footer .socials a {
+            color: var(--text2);
+            font-size: 20px;
+            transition: 0.3s;
+        }
+        .footer .socials a:hover { color: var(--purple); }
+
+        /* ===== RESPONSYWNOŚĆ ===== */
+        @media (max-width: 768px) {
+            .page-hero h1 { font-size: 32px; }
+            .faq-item .question { font-size: 15px; padding: 14px 18px; }
+            .faq-item .answer { font-size: 14px; }
+        }
+        @media (max-width: 480px) {
+            .page-hero h1 { font-size: 24px; }
+            .faq-item .question { font-size: 14px; padding: 12px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================================
+    NAWIGACJA
+    ============================================================ -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">PROMORA</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Start</a></li>
+                <li><a href="regulamin.html">Regulamin</a></li>
+                <li><a href="administracja.html">Administracja</a></li>
+                <li><a href="faq.html" class="active">FAQ</a></li>
+                <li><a href="eventy.html">Eventy</a></li>
+                <li><a href="gra.html">Gra</a></li>
+                <li><a href="https://discord.gg/f8qhJQSRA7" target="_blank" class="btn-discord-nav"><i class="fab fa-discord"></i> Dołącz</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ============================================================
+    HERO
+    ============================================================ -->
+    <section class="page-hero">
+        <div class="container">
+            <h1>❓ <span class="highlight">FAQ</span> – Najczęściej zadawane pytania</h1>
+            <p>Sprawdź odpowiedzi na najważniejsze pytania o Promora</p>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    FAQ LISTA
+    ============================================================ -->
+    <section>
+        <div class="container">
+            <div class="faq-list">
+
+                <!-- 1 -->
+                <div class="faq-item open">
+                    <div class="question">
+                        <span>❓ Jak dołączyć na serwer Promora?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="answer">
+                        Wystarczy kliknąć przycisk <strong>"Dołącz"</strong> w nawigacji lub wejść bezpośrednio pod link: <br />
+                        <a href="https://discord.gg/f8qhJQSRA7" target="_blank" style="color:var(--purple);">discord.gg/f8qhJQSRA7</a>
+                    </div>
+                </div>
+
+                <!-- 2 -->
+                <div class="faq-item">
+                    <div class="question">
+                        <span>❓ Jak znaleźć swoje ID Discord?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="answer">
+                        1. Włącz <strong>Tryb Dewelopera</strong> w Discordzie (Ustawienia → Zaawansowane → Tryb Dewelopera).<br />
+                        2. Kliknij prawym przyciskiem na swój nick.<br />
+                        3. Wybierz <strong>"Kopiuj ID"</strong>.<br />
+                        To 18-cyfrowy numer, którego używasz do rejestracji na stronie.
+                    </div>
+                </div>
+
+                <!-- 3 -->
+                <div class="faq-item">
+                    <div class="question">
+                        <span>❓ Czy rejestracja na stronie jest wymagana?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="answer">
+                        Nie, rejestracja jest <strong>dobrowolna</strong>. Daje Ci jednak dostęp do gry, topki i innych funkcji które będą pojawiać się na stronie.
+                    </div>
+                </div>
+
+                <!-- 4 -->
+                <div class="faq-item">
+                    <div class="question">
+                        <span>❓ Jak zareklamować swój serwer?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="answer">
+                        Po dołączeniu na naszego Discorda przejdź na kanały reklamowe i postępuj zgodnie z <a href="regulamin.html" style="color:var(--purple);">regulaminem</a>. Pamiętaj o przestrzeganiu zasad!
+                    </div>
+                </div>
+
+                <!-- 5 -->
+                <div class="faq-item">
+                    <div class="question">
+                        <span>❓ Co to jest gra Kliker Promora?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="answer">
+                        To prosta gra, w której zbierasz punkty klikając w przycisk. Punkty zapisują się w bazie, a Ty możesz rywalizować z innymi w <strong>topce</strong>. Im więcej kliknięć, tym wyższa ranga!
+                    </div>
+                </div>
+
+                <!-- 6 -->
+                <div class="faq-item">
+                    <div class="question">
+                        <span>❓ Jakie są wymagania, żeby zostać moderatorem?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="answer">
+                        Wymagania zmieniają się w zależności od potrzeb. Obecnie poszukujemy osób odpowiedzialnych, aktywnych i znających regulamin. Szczegóły znajdziesz na kanale <strong>#rekrutacja</strong> na Discordzie.
+                    </div>
+                </div>
+
+                <!-- 7 -->
+                <div class="faq-item">
+                    <div class="question">
+                        <span>❓ Czy mogę zaproponować nowy event?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="answer">
+                        Oczywiście! Chętnie słuchamy pomysłów od naszej społeczności. Napisz na kanale <strong>#pomysły</strong> lub bezpośrednio do administracji.
+                    </div>
+                </div>
+
+                <!-- 8 -->
+                <div class="faq-item">
+                    <div class="question">
+                        <span>❓ Czy strona jest bezpieczna?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="answer">
+                        Tak! Hasła są przechowywane w zaszyfrowanej formie (bcrypt), a komunikacja z API odbywa się lokalnie. Nie udostępniamy żadnych danych osobom trzecim.
+                    </div>
+                </div>
+
+                <!-- 9 -->
+                <div class="faq-item">
+                    <div class="question">
+                        <span>❓ Co zrobić, gdy zapomnę hasła?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="answer">
+                        Napisz do nas na Discordzie – administracja pomoże Ci zresetować hasło. Pamiętaj, że hasło możesz zmienić tylko na naszą prośbę (dla bezpieczeństwa).
+                    </div>
+                </div>
+
+                <!-- 10 -->
+                <div class="faq-item">
+                    <div class="question">
+                        <span>❓ Jak mogę wesprzeć rozwój Promora?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="answer">
+                        Możesz zapraszać znajomych, być aktywnym na czacie, zgłaszać pomysły na ulepszenia i uczestniczyć w eventach. Każdy gest jest dla nas ważny ❤️
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    STOPKA
+    ============================================================ -->
+    <footer class="footer">
+        <div class="container">
+            <div class="socials">
+                <a href="https://discord.gg/f8qhJQSRA7" target="_blank"><i class="fab fa-discord"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+                <a href="#"><i class="fab fa-github"></i></a>
+            </div>
+            <p>© 2026 B.P. Wszelkie prawa zastrzeżone. | Built with <i class="fas fa-heart" style="color:var(--pink);"></i></p>
+        </div>
+    </footer>
+
+    <!-- ============================================================
+    JAVASCRIPT – FAQ TOGGLE
+    ============================================================ -->
+    <script>
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.addEventListener('click', function() {
+                this.classList.toggle('open');
+            });
+        });
+    </script>
+
+</body>
+</html>
