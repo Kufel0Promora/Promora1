@@ -34,5 +34,35 @@ async def check_user(ctx, user_id: str):
     except:
         await ctx.send(f"❌ Użytkownik o ID `{user_id}` nie znaleziony.")
 
+@bot.command(name='reset_password')
+@commands.has_permissions(administrator=True)
+async def reset_password(ctx, user_id: str, new_password: str):
+    import json, bcrypt, os
+    users_file = 'users.json'
+    
+    # Sprawdź czy plik istnieje
+    if not os.path.exists(users_file):
+        await ctx.send("❌ Baza użytkowników nie istnieje.")
+        return
+    
+    # Wczytaj użytkowników
+    with open(users_file, 'r', encoding='utf-8') as f:
+        users = json.load(f)
+    
+    # Sprawdź czy użytkownik istnieje
+    if user_id not in users:
+        await ctx.send(f"❌ Użytkownik o ID `{user_id}` nie istnieje.")
+        return
+    
+    # Hashuj nowe hasło
+    hashed = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
+    users[user_id]['password'] = hashed.decode('utf-8')
+    
+    # Zapisz
+    with open(users_file, 'w', encoding='utf-8') as f:
+        json.dump(users, f, indent=2, ensure_ascii=False)
+    
+    await ctx.send(f"✅ Hasło dla użytkownika `{user_id}` zostało zresetowane!")
+    
 if __name__ == '__main__':
     bot.run(DISCORD_TOKEN)
