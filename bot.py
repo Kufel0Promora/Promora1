@@ -63,6 +63,57 @@ async def reset_password(ctx, user_id: str, new_password: str):
         json.dump(users, f, indent=2, ensure_ascii=False)
     
     await ctx.send(f"✅ Hasło dla użytkownika `{user_id}` zostało zresetowane!")
+
+@bot.command(name='reset_password')
+@commands.has_permissions(administrator=True)
+async def reset_password(ctx, user_id: str, new_password: str):
+    import json, bcrypt, os, requests
     
+    # Sprawdź czy użytkownik ma uprawnienia (tylko admin)
+    if not ctx.author.guild_permissions.administrator:
+        await ctx.send("❌ Tylko administrator może resetować hasła!")
+        return
+    
+    # Sprawdź czy hasło ma minimum 6 znaków
+    if len(new_password) < 6:
+        await ctx.send("❌ Hasło musi mieć co najmniej 6 znaków!")
+        return
+    
+    # Ścieżka do pliku users.json na Render (przez API)
+    try:
+        # Pobierz listę użytkowników
+        response = requests.get('https://promora-backend.onrender.com/api/leaderboard')
+        if response.status_code != 200:
+            await ctx.send("❌ Nie udało się połączyć z bazą danych!")
+            return
+        
+        users_data = response.json()
+        
+        # Sprawdź czy użytkownik istnieje
+        user_exists = False
+        for user in users_data:
+            if user['id'] == user_id:
+                user_exists = True
+                break
+        
+        if not user_exists:
+            await ctx.send(f"❌ Użytkownik o ID `{user_id}` nie istnieje!")
+            return
+        
+        # Wyślij zapytanie do API resetowania hasła
+        reset_response = requests.post(
+            'https://promora-backend.onrender.com/api/reset-password',
+            json={'userId': user_id, 'newPassword': new_password},
+            headers={'Content-Type': 'application/json'}
+        )
+        
+        if reset_response.status_code == 200:
+            await ctx.send(f"✅ Hasło dla użytkownika `{user_id}` zostało zresetowane!")
+        else:
+            await ctx.send(f"❌ Błąd resetowania hasła: {reset_response.text}")
+            
+    except Exception as e:
+        await ctx.send(f"❌ Błąd: {str(e)}")
+        
 if __name__ == '__main__':
     bot.run(DISCORD_TOKEN)
