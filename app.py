@@ -5,7 +5,6 @@ import json
 import requests
 import os
 import threading
-import asyncio
 from config import SECRET_KEY, DISCORD_TOKEN, GUILD_ID
 
 app = Flask(__name__)
@@ -14,14 +13,23 @@ CORS(app)
 
 USERS_FILE = 'users.json'
 
-# Uruchom bota w osobnym wątku
+# ============================================================
+# URUCHOM BOTA W TLE
+# ============================================================
+
 def run_bot():
-    from bot import bot, DISCORD_TOKEN
-    bot.run(DISCORD_TOKEN)
+    import asyncio
+    from bot import bot
+    try:
+        bot.run(DISCORD_TOKEN)
+    except Exception as e:
+        print(f"❌ Błąd bota: {e}")
 
 thread = threading.Thread(target=run_bot)
 thread.daemon = True
 thread.start()
+print("🤖 Bot uruchomiony w tle")
+
 # ============================================================
 # FUNKCJE POMOCNICZE
 # ============================================================
@@ -38,16 +46,12 @@ def save_users(users):
         json.dump(users, f, indent=2, ensure_ascii=False)
 
 # ============================================================
-# WERYFIKACJA PRZEZ API DISCORDA (BEZ BOTA!)
+# WERYFIKACJA PRZEZ API DISCORDA
 # ============================================================
 
 def verify_user_discord(user_id: str):
-    """Sprawdza czy użytkownik jest na serwerze używając API Discorda"""
     url = f"https://discord.com/api/v10/guilds/{GUILD_ID}/members/{user_id}"
-    headers = {
-        "Authorization": f"Bot {DISCORD_TOKEN}"
-    }
-    
+    headers = {"Authorization": f"Bot {DISCORD_TOKEN}"}
     try:
         response = requests.get(url, headers=headers)
         if response.status_code == 200:
@@ -58,18 +62,17 @@ def verify_user_discord(user_id: str):
                 'username': data['user']['username'],
                 'display_name': data.get('nick', data['user']['username'])
             }
-        elif response.status_code == 404:
-            return None
-        else:
-            print(f"❌ Błąd API Discorda: {response.status_code}")
-            return None
-    except Exception as e:
-        print(f"❌ Błąd połączenia: {e}")
+        return None
+    except:
         return None
 
 # ============================================================
 # ENDPOINTY API
 # ============================================================
+
+@app.route('/ping')
+def ping():
+    return "Pong!", 200
 
 @app.route('/api/verify', methods=['POST'])
 def verify():
@@ -190,13 +193,6 @@ def leaderboard():
             })
     leaderboard.sort(key=lambda x: x['score'], reverse=True)
     return jsonify(leaderboard[:10])
-
-@app.route('/ping')
-def ping():
-    return "Pong!", 200
-# ============================================================
-# URUCHOMIENIE
-# ============================================================
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
