@@ -223,5 +223,16 @@ def reset_password():
     
     return jsonify({'success': True, 'message': 'Hasło zostało zresetowane!'})
 
+@app.route('/api/users', methods=['GET'])
+def get_users():
+    users = load_users()
+    user_list = []
+    for user_id, data in users.items():
+        user_list.append({
+            'id': user_id,
+            'username': data.get('username', f'User_{user_id[-4:]}')
+        })
+    return jsonify(user_list)
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
