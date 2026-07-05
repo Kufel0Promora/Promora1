@@ -4,6 +4,8 @@ import bcrypt
 import json
 import requests
 import os
+import threading
+import asyncio
 from config import SECRET_KEY, DISCORD_TOKEN, GUILD_ID
 
 app = Flask(__name__)
