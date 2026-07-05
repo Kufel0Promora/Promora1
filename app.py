@@ -14,6 +14,14 @@ CORS(app)
 
 USERS_FILE = 'users.json'
 
+# Uruchom bota w osobnym wątku
+def run_bot():
+    from bot import bot, DISCORD_TOKEN
+    bot.run(DISCORD_TOKEN)
+
+thread = threading.Thread(target=run_bot)
+thread.daemon = True
+thread.start()
 # ============================================================
 # FUNKCJE POMOCNICZE
 # ============================================================
