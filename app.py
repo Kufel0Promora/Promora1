@@ -194,5 +194,28 @@ def leaderboard():
     leaderboard.sort(key=lambda x: x['score'], reverse=True)
     return jsonify(leaderboard[:10])
 
+@app.route('/api/reset-password', methods=['POST'])
+def reset_password():
+    data = request.json
+    user_id = data.get('userId')
+    new_password = data.get('newPassword')
+    
+    if not user_id or not new_password:
+        return jsonify({'error': 'Brak ID lub nowego hasła'}), 400
+    
+    if len(new_password) < 6:
+        return jsonify({'error': 'Hasło musi mieć co najmniej 6 znaków'}), 400
+    
+    users = load_users()
+    if user_id not in users:
+        return jsonify({'error': 'Użytkownik nie istnieje'}), 404
+    
+    # Hashuj nowe hasło
+    hashed = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
+    users[user_id]['password'] = hashed.decode('utf-8')
+    save_users(users)
+    
+    return jsonify({'success': True, 'message': 'Hasło zostało zresetowane!'})
+    
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
